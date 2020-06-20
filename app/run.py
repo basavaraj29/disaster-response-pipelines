@@ -3,8 +3,8 @@ import plotly
 import pandas as pd
 
 import nltk
-from nltk.stem import WordNetLemmatizer
-from nltk.tokenize import word_tokenize
+from nltk import word_tokenize, sent_tokenize
+from nltk.stem.porter import PorterStemmer
 
 from flask import Flask
 from flask import render_template, request, jsonify
@@ -12,20 +12,20 @@ from plotly.graph_objs import Bar
 from sklearn.externals import joblib
 from sqlalchemy import create_engine
 
+import re
 nltk.download(['punkt', 'wordnet'])
 
 app = Flask(__name__)
 
+url_regex = 'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'
 def tokenize(text):
-    tokens = word_tokenize(text)
-    lemmatizer = WordNetLemmatizer()
-
-    clean_tokens = []
-    for tok in tokens:
-        clean_tok = lemmatizer.lemmatize(tok).lower().strip()
-        clean_tokens.append(clean_tok)
-
-    return clean_tokens
+    '''
+    Function to tokenize input text.
+    '''
+    text = re.sub(url_regex, ' ', text)
+    text = word_tokenize(re.sub(r'[^a-zA-Z0-9]', ' ', text))
+    stem = PorterStemmer()
+    return [stem.stem(word.lower().strip()) for word in text]
 
 # load data
 engine = create_engine('sqlite:///../data/DisasterResponse.db')

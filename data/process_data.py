@@ -4,6 +4,17 @@ import pandas as pd
 from sqlalchemy import create_engine
 
 def load_data(messages_filepath, categories_filepath):
+    '''
+    Loads two pandas dataframes from the given input files and returns a merged dataframe.
+
+    INPUTS:
+    messages_filepath - csv file containing messages data
+    categories_filepath - csv file containing category data
+
+    RETURNS:
+    A pandas dataframe containing messages and its corresponding category in one hot
+    encoded format.
+    '''
     messages = pd.read_csv(messages_filepath)
     categories = pd.read_csv(categories_filepath)
     df = pd.merge(messages, categories, on=['id'])
@@ -19,6 +30,9 @@ def load_data(messages_filepath, categories_filepath):
     return df
 
 def clean_data(df):
+    '''
+    Removes duplicates from the dataframe.
+    '''
     df['dup'] = df.duplicated(subset=['id'], keep='first')
     df = df[~df['dup']]
     df = df.drop(columns=['dup'])
@@ -26,6 +40,9 @@ def clean_data(df):
 
 
 def save_data(df, database_filename):
+    '''
+    Creates an sqlite database containing the dataframe, in the given file. 
+    '''
     engine = create_engine('sqlite:///' + database_filename)
     df.to_sql('tweets', engine, index=False)
 
@@ -41,12 +58,12 @@ def main():
 
         print('Cleaning data...')
         df = clean_data(df)
-        
+
         print('Saving data...\n    DATABASE: {}'.format(database_filepath))
         save_data(df, database_filepath)
-        
+
         print('Cleaned data saved to database!')
-    
+
     else:
         print('Please provide the filepaths of the messages and categories '\
               'datasets as the first and second argument respectively, as '\
