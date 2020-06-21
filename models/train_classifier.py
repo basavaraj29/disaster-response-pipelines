@@ -48,7 +48,7 @@ def tokenize(text):
 
 def build_model():
     '''
-    Returns a pipeline for multi-class classification for text input
+    Returns a grid search pipeline for multi-class classification for text input
     '''
     pipeline = Pipeline([ \
         ('vect', CountVectorizer(tokenizer=tokenize)), \
@@ -56,17 +56,21 @@ def build_model():
         ('svd', TruncatedSVD(n_components=20, random_state=42)), \
         ('clf', MultiOutputClassifier(RandomForestClassifier(random_state=42))) \
     ])
-    return pipeline
+
+    parameters = { \
+        'clf__estimator__min_samples_split': [2, 4], \
+        'clf__estimator__min_samples_leaf': [1, 2], \
+        'clf__estimator__n_estimators': [7, 10] \
+    }
+    cv = GridSearchCV(pipeline, parameters)
+    return cv
 
 def evaluate_model(model, X_test, y_test, category_names):
     '''
     Prints classification report for test data on each category
     '''
     y_pred = model.predict(X_test)
-    for i in range(len(category_names)):
-        col = y_test.columns[i]
-        print(col)
-        print(classification_report(y_test[col].tolist(), y_pred[:,i:i+1]))
+    print(classification_report(y_test, y_pred))
     return
 
 

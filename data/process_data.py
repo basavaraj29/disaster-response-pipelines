@@ -25,6 +25,7 @@ def load_data(messages_filepath, categories_filepath):
     for column in categories:
         categories[column] = categories[column].apply(lambda x: x.split('-')[1])
         categories[column] = categories[column].astype('int')
+        categories[column] = categories[column].apply(lambda x: 1 if x > 1 else x)
     df = df.drop(columns=['categories'])
     df = pd.merge(df, categories, left_index=True, right_index=True)
     return df
@@ -41,7 +42,7 @@ def clean_data(df):
 
 def save_data(df, database_filename):
     '''
-    Creates an sqlite database containing the dataframe, in the given file. 
+    Creates an sqlite database containing the dataframe, in the given file.
     '''
     engine = create_engine('sqlite:///' + database_filename)
     df.to_sql('tweets', engine, index=False)
