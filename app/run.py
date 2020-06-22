@@ -47,6 +47,9 @@ def index():
         X.append(col)
         Y.append((len(df[df[col] == 1])*100.0)/len(df))
 
+    tmp_df = df[['genre', 'id']].groupby('genre').count()
+    tmp_df['id'] = tmp_df['id']/len(df)
+
     graphs = [
         {
             'data': [
@@ -63,6 +66,24 @@ def index():
                 },
                 'xaxis': {
                     'title': "Category"
+                }
+            }
+        },
+        {
+            'data': [
+                Bar(
+                    x=list(tmp_df.index),
+                    y=list(tmp_df['id'])
+                )
+            ],
+
+            'layout': {
+                'title': 'Distribution of Message Sources',
+                'yaxis': {
+                    'title': "Percent"
+                },
+                'xaxis': {
+                    'title': "Source"
                 }
             }
         }
