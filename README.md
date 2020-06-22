@@ -4,7 +4,7 @@ This project trains a machine learning pipeline for categorisation of messages d
 ## Table of Contents
 1. [Dependencies](#deps)
 2. [Project Motivation](#motivation)
-3. [Dataset] (#dataset)
+3. [Dataset](#dataset)
 4. [File Descriptions](#desc)
 5. [Results](#results)
 6. [Instructions](#instructions)
