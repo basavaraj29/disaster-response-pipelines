@@ -20,12 +20,15 @@ During a natural calamity/ disaster various government agencies and NGOs come to
 Credits to Figure Eight (https://appen.com/) and Udacity for putting together this dataset. On a whole, it contains around 25K messages categorised into a total of 36 categories.
 
 ## File Descriptions<a name="desc"></a>
-data/*
-The folder contains two csv files corresponding to messages and their corresponding categories. In file `process_data.py`, we clean the data and merge these two dataset into one, containing the input message and one-hot encoding of the categories it belongs to. We then store the dataframe in an sql database, `DisasterResponse.db`.
+1. `data/*`
 
-models/*
-In file `train_classifier.py`, we train a multi-class classification pipeline using Random Forest Classifier and Grid Search to find the best parameters. The input text is tokenized using commonly used techniques such as CountVectorizer and tf-idf transformation. Latent Semantic Analysis is performed on this for dimensionality reduction.
-We train a pipeline, display classification metrics on the test data and save the best fit model to `classifier.pkl`
+    - The folder contains two csv files corresponding to messages and their corresponding categories. In file `process_data.py`, we clean the data and merge these two dataset into one, containing the input message and one-hot encoding of the categories it belongs to. We then store the dataframe in an sql database, `DisasterResponse.db`.
+
+2. `models/*`
+    - In file `train_classifier.py`, we train a multi-class classification pipeline using Random Forest Classifier and Grid Search to find the best parameters. The input text is tokenized using commonly used techniques such as CountVectorizer and tf-idf transformation. Latent Semantic Analysis is performed on this for dimensionality reduction. We train a pipeline, display classification metrics on the test data and save the best fit model to `classifier.pkl`
+
+3. `app/*`
+    - This folder contains all required templates for the web app. File `run.py` helps route the requests and renders the required templates. 
 
 ## Results<a name="results"></a>
 The average f-score of the classifier is around 0.5, with a precision of 0.6. The model is able to classify the given input message as relevant or not with a f-score of 0.86. For dominant categories, the f-score is around 0.6, lie Aid, weather related, food.
